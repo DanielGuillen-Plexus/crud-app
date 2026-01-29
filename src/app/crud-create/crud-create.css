@@ -1,0 +1,19 @@
+
+label, input {
+  display: block;
+}
+label {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12pt;
+}
+input {
+  font-size: 16pt;
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 400px;
+  border: solid .3px;
+}
+button {
+  padding: 10px;
+}

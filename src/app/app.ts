@@ -1,12 +1,22 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  standalone: true,
+  template: `
+  <header class="header">
+    <a routerLink="">Home</a>
+    <a routerLink="create">Create</a>
+  </header>
+  <br>
+  <section class="content"> 
+    <router-outlet></router-outlet>
+  </section>
+  `,
+  styleUrls: ['./app.css'],
+  imports: [RouterModule],
 })
 export class App {
-  protected readonly title = signal('crud-app');
+  title = signal('crud-app');
 }
