@@ -38,8 +38,16 @@ export class CrudCreate {
   constructor() { }
 
   submitUser() {
-    if(this.userService.saveUser(this.createForm.value as UserDto)){
-      this.router.navigateByUrl('/');
-    }
+
+    const dto = this.createForm.value as UserDto;
+    this.userService.saveUser(dto).subscribe({
+      next: (response) => {
+        console.log('Guardado con éxito', response);
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        alert(err.message);
+      }
+    });
   }
 }

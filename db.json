@@ -1,0 +1,70 @@
+{
+  "users": [
+    {
+      "id": "f3a9b2c1-4d5e-4f6a-9b8c-1d2e3f4a5b6c",
+      "name": "Pedro",
+      "surname": "Pérez",
+      "mail": "edroerez@example.com"
+    },
+    {
+      "id": "9b8c7d6e-5f4a-4b3c-8a7d-6e5f4a3b2c1d",
+      "name": "Laura",
+      "surname": "Pérez",
+      "mail": "laura@example.com"
+    },
+    {
+      "id": "2a3b4c5d-6e7f-4a8b-9c0d-1e2f3a4b5c6d",
+      "name": "Marcos",
+      "surname": "López",
+      "mail": "marcos@example.com"
+    },
+    {
+      "id": "c1d2e3f4-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+      "name": "Iria",
+      "surname": "Varela",
+      "mail": "iria@example.com"
+    },
+    {
+      "id": "0f1e2d3c-4b5a-4756-8d9c-0b1a2c3d4e5f",
+      "name": "Noa",
+      "surname": "Santos",
+      "mail": "noa@example.com"
+    },
+    {
+      "id": "8ccdb41a-1eda-45cf-893f-a472f08c6af2",
+      "name": "asda",
+      "surname": "asda",
+      "mail": "test@ads.asd"
+    },
+    {
+      "id": "1cfce376-04be-4d07-9612-7e67328df4cb",
+      "name": "asda",
+      "surname": "asda",
+      "mail": "test@ads.asd"
+    },
+    {
+      "id": "6a5f0e29-42d2-4aa7-b926-a43fcc4e53d0",
+      "name": "asd",
+      "surname": "asd",
+      "mail": "adas@ads.asd"
+    },
+    {
+      "id": "7ad709ee-e533-4d1b-90aa-93470d75b8da",
+      "name": "Daniel",
+      "surname": "Guillen",
+      "mail": "danielguillenaplicacion@gmail.com"
+    },
+    {
+      "id": "ffbb44eb-8761-4131-940a-109dbefa88a4",
+      "name": "Noa",
+      "surname": "Santos",
+      "mail": "noa@example.com"
+    },
+    {
+      "id": "2a1d5730-f46a-4e5b-81f0-a4053ecdf668",
+      "name": "Noa",
+      "surname": "Santos",
+      "mail": "noa@example.com"
+    }
+  ]
+}

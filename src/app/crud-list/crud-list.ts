@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../user-service';
 import { CommonModule } from '@angular/common';
 import { UserData } from '../user-data';
@@ -33,11 +33,26 @@ import { RouterModule } from '@angular/router';
   `,
   styleUrls: ['./crud-list.css'],
 })
-export class CrudList {
+export class CrudList implements OnInit {
   userService: UserService = inject(UserService);
   userDataList: UserData[] = [];
-  
-  constructor (){
-    this.userDataList = this.userService.getAllUsers();
+
+  constructor() {
+    // this.userDataList = this.userService.getAllUsers();
   }
+
+  ngOnInit(): void {
+    // 2. Mueve la lógica aquí
+     this.loadUsers();
+  }
+
+  loadUsers() {
+    this.userService.getAllUsers().subscribe({
+      next: (users) => {
+        this.userDataList = users;
+      },
+      error: (err) => console.error("Error cargando usuarios", err)
+    });
+  }
+
 }

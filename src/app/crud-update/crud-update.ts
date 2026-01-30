@@ -41,7 +41,8 @@ export class CrudUpdate {
   });
   constructor() {
     this.id = this.route.snapshot.params["id"];
-    this.userData = this.userService.getSpecificUser(this.id);
+    this.userService.getSpecificUser(this.id).subscribe(user => {this.userData = user});
+        // this.userData = this.userService.getSpecificUser(this.id);
     if (this.userData) {
       this.updateForm.setValue({
         name: this.userData.name,
