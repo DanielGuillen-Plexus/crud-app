@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { UserService } from '../user-service';
 import { CommonModule } from '@angular/common';
 import { UserData } from '../user-data';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-crud-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `
   <section>
   <table>
@@ -23,7 +24,8 @@ import { UserData } from '../user-data';
         <td>{{ userData.name }}</td>
         <td>{{ userData.surname }}</td>
         <td>{{ userData.mail }}</td>
-        <td><button (click)= "userService.deleteUser(userData.id)">Borrar</button></td>
+        <td><button (click)= "userService.deleteUser(userData.id)">Borrar</button>
+        <button [routerLink]='["/update",userData.id]'>Modificar</button></td>
       </tr>
     </tbody>
   </table>

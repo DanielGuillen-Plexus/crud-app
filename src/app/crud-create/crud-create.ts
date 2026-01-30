@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../user-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserCreate } from '../user-create';
+import { UserDto } from '../user-dto';
 
 @Component({
   selector: 'app-crud-create',
@@ -11,6 +11,7 @@ import { UserCreate } from '../user-create';
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   template: `
   <section>
+    <h4>Crear usuario:</h4><br>
     <form [formGroup]="createForm" (ngSubmit)="submitUser()">
       <label for="first-name">First name:</label>
         <input type="text" id="first-name" formControlName="name">
@@ -30,15 +31,15 @@ export class CrudCreate {
   userService = inject(UserService);
   private router = inject(Router);
   createForm = new FormGroup({
-    name: new FormControl(''),
-    surname: new FormControl(''),
-    mail: new FormControl('')
+    name: new FormControl<string>(''),
+    surname: new FormControl<string>(''),
+    mail: new FormControl<string>('')
   });
   constructor() { }
 
   submitUser() {
-    this.userService.saveUser(this.createForm.value as UserCreate);
-    this.router.navigateByUrl('/');
+    if(this.userService.saveUser(this.createForm.value as UserDto)){
+      this.router.navigateByUrl('/');
+    }
   }
-
 }

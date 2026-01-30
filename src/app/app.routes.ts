@@ -12,5 +12,10 @@ export const routes: Routes = [
         path:'create',
         component: CrudCreate,
         title:'Create user'
+    },
+    {
+        path: 'update/:id',
+        component:CrudUpdate,
+        title: 'Update user'
     }
 ];
