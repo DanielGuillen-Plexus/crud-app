@@ -1,5 +1,13 @@
+:host{
+    margin: auto;
+}
 .header {
     display: flex;
     flex-direction: row;
-    gap: 2em;
+    margin: 1em 2em 1em;
+}
+
+.content{
+    margin: auto 2em;
+    width: fit-content;
 }

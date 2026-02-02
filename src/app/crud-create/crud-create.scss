@@ -1,5 +1,16 @@
 
-
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  mat-form-field {
+    width: 400px !important;
+  }
+  button{
+    width: fit-content;
+  }
+}
+/*
 label, input {
   display: block;
 }
@@ -15,4 +26,4 @@ input {
 }
 button {
   padding: 10px;
-}
+} */
