@@ -41,8 +41,7 @@ export class CrudCreate {
 
     const dto = this.createForm.value as UserDto;
     this.userService.saveUser(dto).subscribe({
-      next: (response) => {
-        console.log('Guardado con éxito', response);
+      next: () => {
         this.router.navigateByUrl('/');
       },
       error: (err) => {
