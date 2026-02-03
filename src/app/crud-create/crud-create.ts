@@ -15,7 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-crud-create',
@@ -102,21 +102,25 @@ export class CrudCreate {
     }),
   });
   constructor() {}
-  // checkEmailunique(control: AbstractControl): ValidationErrors | null {
-  //   if (!control.value) return null;
-  //   return this.userService.findUserMail(this.id, control.value) ? { emailExists: true } : null;
-  // }
 
   checkEmailAsync(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
     if (!email) return of(null);
 
-    const exists = this.userService.findNewUserMail(email);
-    return of(exists ? { emailExists: true } : null);
+    return this.userService
+      .findNewUserMail(email)
+      .pipe(map((exists) => (exists ? { emailExists: true } : null)));
+      // .pipe(map((exists) => (exists ? { emailExists: true } : null),catchError(() => of(null))));
   }
   submitUser() {
-    if (this.userService.saveUser(this.createForm.value as UserDto)) {
-      this.router.navigateByUrl('/');
-    }
+    const dto = this.createForm.value as UserDto;
+    this.userService.saveUser(dto).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        alert(err.message);
+      },
+    });
   }
 }

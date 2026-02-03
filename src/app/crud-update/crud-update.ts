@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { debounceTime, map, Observable, of } from 'rxjs';
+import { catchError, debounceTime, map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-crud-update',
@@ -101,14 +101,16 @@ export class CrudUpdate {
   });
   constructor() {
     this.id = this.route.snapshot.params['id'];
-    this.userData = this.userService.getSpecificUser(this.id);
-    if (this.userData) {
-      this.updateForm.setValue({
-        name: this.userData.name,
-        surname: this.userData.surname,
-        mail: this.userData.mail,
-      });
-    }
+    this.userService.getSpecificUser(this.id).subscribe((user) => {
+      this.userData = user;
+      if (this.userData) {
+        this.updateForm.setValue({
+          name: this.userData.name,
+          surname: this.userData.surname,
+          mail: this.userData.mail,
+        });
+      }
+    });
   }
 
   // checkEmailunique(control: AbstractControl): ValidationErrors | null {
@@ -117,15 +119,26 @@ export class CrudUpdate {
   // }
 
   checkEmailAsync(control: AbstractControl): Observable<ValidationErrors | null> {
-  const email = control.value;
-  if (!email) return of(null);
+    const email = control.value;
+    if (!email) return of(null);
 
-  const exists = this.userService.findUserMail(this.id, email);
-  return of(exists ? { emailExists: true } : null);
-}
+    return this.userService
+      .findUserMail(this.id, email)
+      .pipe(map((exists) => (exists ? { emailExists: true } : null)));
+      // .pipe(map((exists) => (exists ? { emailExists: true } : null),catchError(() => of(null))));
+  }
   updateUser() {
-    if (this.userService.updateUser(this.id, this.updateForm.value as UserDto)) {
-      this.router.navigateByUrl('/');
-    }
+    // try {
+    this.userService.updateUser(this.id, this.updateForm.value as UserDto).subscribe({
+      next: () => {
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        alert(err.message);
+      },
+    });
+    // } catch (error) {
+    //   alert(error);
+    // }
   }
 }

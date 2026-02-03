@@ -3,6 +3,7 @@ import { UserService } from '../user-service';
 import { CommonModule } from '@angular/common';
 import { UserData } from '../user-data';
 import { RouterModule } from '@angular/router';
+import { Observable, BehaviorSubject, switchMap } from 'rxjs';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -18,13 +19,13 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatPaginatorModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
   ],
   template: `
     <section>
       <mat-form-field>
         <mat-label>Filter</mat-label>
-        <input matInput (keyup)="filterUsers($event)" placeholder="Nombres o apellidos"/>
+        <input matInput (keyup)="filterUsers($event)" placeholder="Nombres o apellidos" />
       </mat-form-field>
       <table mat-table [dataSource]="userDataList">
         <ng-container matColumnDef="name">
@@ -60,35 +61,41 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./crud-list.scss'],
 })
 export class CrudList implements OnInit {
+  private refreshList$ = new BehaviorSubject<void>(undefined);
   userService: UserService = inject(UserService);
-  // userDataList: UserData[] = [];
   userDataList = new MatTableDataSource<UserData>([]);
+  private allUsers: UserData[] = [];
   columnsToDisplay = ['name', 'surname', 'mail', 'options'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor() {}
 
+  ngOnInit() {
+    this.loadUsers();
+  }
+  private loadUsers() {
+    this.refreshList$.pipe(switchMap(() => this.userService.getAllUsers())).subscribe({
+      next: (users) => {
+        this.allUsers = users;
+        this.userDataList.data = users;
+      },
+    });
+  }
   ngAfterViewInit() {
     this.userDataList.paginator = this.paginator;
   }
 
-  ngOnInit() {
-    this.loadUsers();
-  }
-
-  loadUsers() {  
-    const users = this.userService.getAllUsers();
-    // this.userDataList = users;
-    this.userDataList.data = users;
-  }
-
-  filterUsers(event:Event){
-    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    const users = this.userService.getAllUsers().filter(usuario => (usuario.name+" "+usuario.surname).toLowerCase().includes(filterValue));
-    this.userDataList.data = users;
-  }
-
   deleteUser(id: string) {
-    this.userService.deleteUser(id);
-    this.loadUsers();
+    if (confirm('Desea borrar el usuario?')) {
+      this.userService.deleteUser(id).subscribe({ next: () => this.refreshList$.next() });
+      console.log('borrado');
+    }
+  }
+
+  filterUsers(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    const users = this.allUsers.filter((usuario) =>
+      (usuario.name + ' ' + usuario.surname).toLowerCase().includes(filterValue),
+    );
+    this.userDataList.data = users;
   }
 }
