@@ -40,11 +40,19 @@ import { MatInputModule } from '@angular/material/input';
           <th mat-header-cell *matHeaderCellDef>Email</th>
           <td mat-cell *matCellDef="let user">{{ user.mail }}</td>
         </ng-container>
+        <ng-container matColumnDef="departament">
+          <th mat-header-cell *matHeaderCellDef>Departament</th>
+          <td mat-cell *matCellDef="let user">{{ user.departament }}</td>
+        </ng-container>
+        <ng-container matColumnDef="birthdate">
+          <th mat-header-cell *matHeaderCellDef>Birthdate</th>
+          <td mat-cell *matCellDef="let user">{{ user.birthdate | date: 'dd/MM/yyyy' }}</td>
+        </ng-container>
         <ng-container matColumnDef="options">
-          <th mat-header-cell *matHeaderCellDef>Opciones</th>
-          <td mat-cell *matCellDef="let user">
-            <button matButton="elevated" (click)="deleteUser(user.id)">Borrar</button>
-            <button matButton="elevated" [routerLink]="['/update', user.id]">Modificar</button>
+          <th mat-header-cell *matHeaderCellDef class="options">Options</th>
+          <td mat-cell *matCellDef="let user" class="options">
+            <button matButton="elevated" id="delete" (click)="deleteUser(user.id)">Delete</button>
+            <button matButton="elevated" id="modify" [routerLink]="['/update', user.id]">Update</button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
@@ -62,10 +70,10 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class CrudList implements OnInit {
   private refreshList$ = new BehaviorSubject<void>(undefined);
-  userService: UserService = inject(UserService);
+  private userService: UserService = inject(UserService);
   userDataList = new MatTableDataSource<UserData>([]);
   private allUsers: UserData[] = [];
-  columnsToDisplay = ['name', 'surname', 'mail', 'options'];
+  columnsToDisplay = ['name', 'surname', 'mail','departament','birthdate', 'options'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor() {}
 

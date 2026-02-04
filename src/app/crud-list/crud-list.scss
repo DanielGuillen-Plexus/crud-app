@@ -1,12 +1,35 @@
-th {
-    text-align: center;
+.options {
+  text-align: center;
+  justify-content: center;
 }
 
-td{
-    button {
-        margin: auto 0.5em
-    }
+td {
+  button {
+    margin: 0.3em 0.5em;
+  }
+  #delete:hover {
+    background-color: crimson;
+    color: white;
+  }
+  #modify:hover {
+    background-color: mediumblue;
+    color: white;
+  }
 }
-mat-form-field{
-    width: 100%;
+mat-form-field {
+  min-width: 500px;
+  width: 50%;
+}
+
+@media only screen and (max-width: 740px) {
+  tr {
+    th {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+    td {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
 }

@@ -16,6 +16,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { map, Observable, of } from 'rxjs';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { Departament } from '../departament';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-crud-create',
@@ -28,6 +32,9 @@ import { map, Observable, of } from 'rxjs';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatSelect,
+    MatOption,
   ],
   template: `
     <section>
@@ -73,6 +80,44 @@ import { map, Observable, of } from 'rxjs';
             <mat-error>Email is in use already.</mat-error>
           }
         </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Departament</mat-label>
+          <mat-select id="departament" formControlName="departament">
+            @for (dep of departamentos; track dep) {
+              <mat-option [value]="dep">{{ dep }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Birthdate:</mat-label>
+          <input
+            matInput
+            [matDatepicker]="datepicker"
+            [max]="date"
+            id="birthdate"
+            formControlName="birthdate"
+          />
+          @if (
+            createForm.controls.birthdate.hasError('matDatepickerFilter') &&
+            createForm.controls.birthdate.touched
+          ) {
+            <mat-error>Birthdate is not valid</mat-error>
+          }
+          @if (
+            createForm.controls.birthdate.hasError('required') &&
+            createForm.controls.birthdate.touched
+          ) {
+            <mat-error>Birthdate is required.</mat-error>
+          }
+          @if (
+            createForm.controls.birthdate.hasError('matDatepickerMax') &&
+            createForm.controls.birthdate.touched
+          ) {
+            <mat-error>Birthdate cannot be future</mat-error>
+          }
+          <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+          <mat-datepicker #datepicker></mat-datepicker>
+        </mat-form-field>
         <br />
         <button
           [disabled]="createForm.invalid"
@@ -89,9 +134,14 @@ import { map, Observable, of } from 'rxjs';
   styleUrls: ['./crud-create.scss'],
 })
 export class CrudCreate {
-  route: ActivatedRoute = inject(ActivatedRoute);
-  userService = inject(UserService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private userService = inject(UserService);
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  date = new Date();
+
+  departamentos = Object.values(Departament);
+
   createForm = new FormGroup({
     name: new FormControl<string>('', [Validators.required, Validators.minLength(3)]),
     surname: new FormControl<string>('', [Validators.required, Validators.minLength(3)]),
@@ -100,8 +150,17 @@ export class CrudCreate {
       asyncValidators: [this.checkEmailAsync.bind(this)],
       updateOn: 'blur',
     }),
+    birthdate: new FormControl<Date>(new Date(), [Validators.required]),
+    departament: new FormControl<Departament>(Departament.IT),
   });
+  
   constructor() {}
+
+  // checkDateFutureAsync(control: AbstractControl): ValidationErrors | null {
+  //   const date = control.value;
+  //   if (!date) return of(null);
+  //   return date.getTime() > new Date() ? { isFuture: true } : null;
+  // }
 
   checkEmailAsync(control: AbstractControl): Observable<ValidationErrors | null> {
     const email = control.value;
@@ -110,12 +169,14 @@ export class CrudCreate {
     return this.userService
       .findNewUserMail(email)
       .pipe(map((exists) => (exists ? { emailExists: true } : null)));
-      // .pipe(map((exists) => (exists ? { emailExists: true } : null),catchError(() => of(null))));
+    // .pipe(map((exists) => (exists ? { emailExists: true } : null),catchError(() => of(null))));
   }
+
   submitUser() {
     const dto = this.createForm.value as UserDto;
     this.userService.saveUser(dto).subscribe({
       next: () => {
+        this.snackBar.open('User created successfully', 'Close', { duration: 5000 });
         this.router.navigateByUrl('/');
       },
       error: (err) => {
